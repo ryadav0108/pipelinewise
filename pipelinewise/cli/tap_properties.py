@@ -68,6 +68,19 @@ def get_tap_properties(tap=None):
         'default_data_flattening_max_level': 0
     },
 
+    'tap-mssql': {
+        'tap_config_extras': {
+            # Generate unique server id's to avoid broken connection
+            # when multiple taps reading from the same mysql server
+            # 'server_id': generate_tap_mysql_server_id()
+        },
+        'tap_stream_id_pattern': '{{database_name}}_{{schema_name}}_{{table_name}}',
+        'tap_stream_name_pattern': '{{database_name}}_{{schema_name}}_{{table_name}}',
+        'tap_catalog_argument': '--catalog',
+        'default_replication_method': 'FULL_TABLE',
+        'default_data_flattening_max_level': 0
+    },
+
     'tap-postgres': {
         'tap_config_extras': {
             # PipelineWise doesn't support replicating from multiple

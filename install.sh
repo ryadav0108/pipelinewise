@@ -80,6 +80,17 @@ install_connector() {
     make_virtualenv $1
 }
 
+clone_connector() {
+    echo
+    echo "--------------------------------------------------------------------------"
+    echo "Cloning $1 connector..."
+    echo "--------------------------------------------------------------------------"
+    cd $SRC_DIR/singer-connectors/$1
+    URL=$(head -n 1 git-clone.txt)
+    cd $VENV_DIR
+    git clone $URL
+}
+
 print_installed_connectors() {
     cd $SRC_DIR
 
@@ -92,9 +103,14 @@ print_installed_connectors() {
     echo "-------------------- -------"
 
     for i in `ls $VENV_DIR`; do
-        source $VENV_DIR/$i/bin/activate
-        VERSION=`python3 -m pip list | grep $i | awk '{print $2}'`
-        printf "%-20s %s\n" $i "$VERSION"
+        if [ $i != "tap-mssql" ]
+        then
+          source $VENV_DIR/$i/bin/activate
+          VERSION=`python3 -m pip list | grep $i | awk '{print $2}'`
+          printf "%-20s %s\n" $i "$VERSION"
+        else
+          printf "%-20s\n" $i
+        fi
     done
 }
 
@@ -128,21 +144,22 @@ cd $SRC_DIR
 make_virtualenv pipelinewise
 
 # Install Singer connectors
-install_connector tap-adwords
-install_connector tap-jira
-install_connector tap-kafka
+#install_connector tap-adwords
+#install_connector tap-jira
+#install_connector tap-kafka
+clone_connector tap-mssql
 install_connector tap-mysql
-install_connector tap-postgres
-install_connector tap-s3-csv
-install_connector tap-salesforce
-install_connector tap-snowflake
-install_connector tap-zendesk
-install_connector target-s3-csv
+#install_connector tap-postgres
+#install_connector tap-s3-csv
+#install_connector tap-salesforce
+#install_connector tap-snowflake
+#install_connector tap-zendesk
+#install_connector target-s3-csv
 install_connector target-snowflake
-install_connector transform-field
-install_connector tap-oracle
-install_connector target-postgres
-install_connector target-redshift
+#install_connector transform-field
+#install_connector tap-oracle
+#install_connector target-postgres
+#install_connector target-redshift
 
 
 # Capture end_time

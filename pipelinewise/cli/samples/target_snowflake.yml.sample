@@ -17,6 +17,7 @@ db_conn:
   user: "<USER>"                                # Snowflake user
   password: "<PASSWORD>"                        # Plain string or vault encrypted
   warehouse: "<WAREHOUSE>"                      # Snowflake virtual warehouse
+  default_target_schema: "<DEFAULT_TARGET_SCHEMA>>"
 
   # We use an intermediate external stage on S3 to load data into Snowflake
   aws_access_key_id: "<ACCESS_KEY>"             # S3 - Plain string or vault encrypted
