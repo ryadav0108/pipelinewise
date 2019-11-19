@@ -80,6 +80,10 @@ install_connector() {
     make_virtualenv $1
 }
 
+apply_fix() {
+  cp $SRC_DIR/singer-connectors/$1/catalog.clj $VENV_DIR/$1/src/tap_mssql/
+}
+
 clone_connector() {
     echo
     echo "--------------------------------------------------------------------------"
@@ -148,6 +152,7 @@ make_virtualenv pipelinewise
 #install_connector tap-jira
 #install_connector tap-kafka
 clone_connector tap-mssql
+apply_fix tap-mssql
 install_connector tap-mysql
 #install_connector tap-postgres
 #install_connector tap-s3-csv
