@@ -178,23 +178,7 @@
                            ;; timestamp is a synonym for rowversion, which is automatically
                            ;; generated and guaranteed to be unique. It is _not_ a datetime
                            ;; https://docs.microsoft.com/en-us/sql/t-sql/data-types/rowversion-transact-sql?view=sql-server-2017
-                           "timestamp"        {"type" ["string"] }
-                           "Phone"            {"type"      ["string"]
-                                               "maxLength" (:column_size column)}
-                           "hierarchyid"      {"type"      ["string"]
-                                               "maxLength" (:column_size column)}
-                           "Name"             {"type"      ["string"]
-                                               "maxLength" (:column_size column)}
-                           "AccountNumber"    {"type"      ["string"]
-                                              "maxLength" (:column_size column)}
-                           "Flag"             {"type" ["boolean"]}
-                           "NameStyle"        {"type" ["boolean"]}
-                           "OrderNumber"      {"type"      ["string"]
-                                               "maxLength" (:column_size column)}
-                           "xml"              {"type"      ["string"]
-                                               "maxLength" (:column_size column)}
-                           "geography"        {"type"      ["string"]
-                                               "maxLength" (:column_size column)}}
+                           "timestamp"        {"type" ["string"] }}
                           type-name-lookup)]
     (-> column-schema
         (maybe-add-nullable-to-column-schema column)
@@ -291,9 +275,18 @@
                               false))))
 
 (defn add-unsupported?-data
-  [column]
+  [config column]
   (if (nil? (column->schema column))
-    (assoc column :unsupported? true)
+    (let [conn-map (assoc (config/->conn-map config)
+                     :dbname
+                     (get config "database"))
+          sql-query (str (format "SELECT C.DATA_TYPE From INFORMATION_SCHEMA.COLUMNS AS C WHERE C.COLUMN_NAME='%s' AND C.TABLE_NAME='%s' AND C.TABLE_SCHEMA='%s'"
+                                 (column :column_name) (column :table_name) (column :table_schem)))
+          base-type (first (jdbc/query conn-map sql-query))
+          updated-column (assoc column :type_name (base-type :data_type))]
+      (if (nil? (column->schema updated-column))
+      (assoc column :type_name "nvarchar")
+      updated-column))
     column))
 
 (defn get-approximate-row-count
@@ -333,7 +326,7 @@
          (map (partial add-primary-key?-data primary-key-data))
          (map (partial add-is-view?-data conn-map))
          (map (partial add-row-count-data row-count-data))
-         (map add-unsupported?-data))))
+         (map (partial add-unsupported?-data config) ))))
 
 (defn get-columns
   [config]

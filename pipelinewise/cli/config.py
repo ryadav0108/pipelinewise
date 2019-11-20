@@ -225,7 +225,7 @@ class Config(object):
         tap_config = {**tap.get('db_conn'), **extra_config_keys}
 
         # Get additional properties will be needed later to generate tap_stream_id
-        tap_dbname = tap_config.get('dbname')
+        tap_dbname = tap_config.get('dbname') if tap_config.get('dbname') is not None else tap_config.get('database')
 
         # Generate tap selection
         selection = []
