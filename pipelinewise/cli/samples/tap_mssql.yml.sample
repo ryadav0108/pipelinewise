@@ -13,11 +13,11 @@ owner: "somebody@foo.com"              # Data owner to contact
 # Source (Tap) - MSSQL connection details
 # ------------------------------------------------------------------------------
 db_conn:
-  server: "<HOST>"                       # MSSQL host
+  host: "<HOST>"                       # MSSQL host
   port: 1433                           # MSSQL port
   user: "<USER>"                       # MSSQL user
   password: "<PASSWORD>"               # Plain string or vault encrypted
-  dbname: "<DB_NAME>"                  # MSSQL database name
+  database: "<DB_NAME>"                  # MSSQL database name
   #filter_dbs: "schema1,schema2"       # Optional: Scan only the required schemas
                                        #           to improve the performance of
                                        #           data extraction
