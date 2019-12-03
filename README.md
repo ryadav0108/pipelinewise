@@ -1,5 +1,5 @@
 # MSSQL Integration
-​
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [How-To](#how-to)
