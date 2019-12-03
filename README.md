@@ -190,4 +190,3 @@ To integrate the [singer-io/tap-mssql](https://github.com/singer-io/tap-mssql) w
                 install_connector target-postgres
                 install_connector target-redshift
                 ```
-C
